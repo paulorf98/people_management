@@ -49,5 +49,4 @@ python -m system
 ### 🐧Linux:
 ```bash
 python3 -m system
-```# people_management
-# people_management
+```
