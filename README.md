@@ -5,6 +5,7 @@ Projeto simples de CRUD usando JSON como armazenamento local.
 - Criar usuário
 - Listar usuários
 - Remover usuário por ID
+- Buscar por nome
 
 ## Tecnologias / Bibliotecas
 - Python
@@ -16,23 +17,20 @@ Projeto simples de CRUD usando JSON como armazenamento local.
 
 ```md id="fix1"
 people_management/
-│
-├── system/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── ui.py
-│   ├── models/
-│   │   └── pessoa.py
-│   └── database/
-│       ├── services.py
-│       └── storage.py
-│
-├── data/
-│   └── cadastrados.json
-│
-├── requirements.txt
+├── .gitignore
 ├── README.md
-└── .gitignore
+├── requirements.txt
+└── system/
+    ├── cli/
+    │   ├── ui.py
+    │   └── messages.py
+    ├── database/
+    │   └── storage.py
+    ├── models/
+    │   └── pessoa.py
+    ├── services/
+    │   └── people_service.py
+    └── main.py
 ```
 
 ## Instalação de dependências
@@ -41,7 +39,7 @@ pip install -r requirements.txt
 
 ## Como executar
 
-### 🪟 Windows / Geral
+### 🪟 Windows
 ```bash
 python -m system
 ```

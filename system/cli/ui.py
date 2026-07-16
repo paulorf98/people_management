@@ -1,6 +1,6 @@
 from rich.table import Table
 from rich.panel import Panel
-from rich import print as rprint
+from rich import print
 
 def mostrar_pessoas(dados):
     tabela = Table(title='Pessoas cadastradas', title_style='bold magenta')
@@ -24,10 +24,10 @@ def mostrar_pessoas(dados):
             str(pessoa.get('idade', 'N/A'))
         )
 
-    rprint(tabela)
+    print(tabela)
 
 def mostrar_remocao(nome):
-    rprint(
+    print(
         Panel(
             f'[green]{nome}[/] removido com sucesso!',
             title='Sucesso'
@@ -35,4 +35,4 @@ def mostrar_remocao(nome):
     )
 
 def mostrar_erro(texto):
-    rprint(Panel(f'[yellow]Erro![/] {texto}'))
+    print(Panel(f'[yellow]Erro![/] {texto}'))

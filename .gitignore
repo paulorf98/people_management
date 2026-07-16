@@ -5,5 +5,5 @@ __pycache__/
 *.pyc
 .vscode/
 .idea/
-data/cadastrados.json
 path/to/venv/
+IDEIAS.md
