@@ -2,13 +2,12 @@ from system.cli import MESSAGES
 from system.models import cadastrar
 from system.database import (
     carregar_dados,
-    salvar_dados,
+    salvar_dados
 )
 
 
 def anexar_arquivo():
     nova_pessoa = cadastrar()
-
     dados = carregar_dados()
 
     if any(p["email"] == nova_pessoa["email"] for p in dados):
@@ -51,16 +50,23 @@ def remover_alguem(id_procurado):
     return True, nome_removido
 
 
-def search_name():
+def search_by_field(field: str):
     data = carregar_dados()
+    found_users = list()
 
     if not data:
         return False, MESSAGES['EMPTY_DATA']
 
-    wanted_name = input('Digite o nome da pessoa: ').strip()
+    if field not in ['nome', 'idade']:
+        return False, MESSAGES['INVALID_VALUE']
+
+    wanted_value = input(f'{field.capitalize()} da pessoa: ').strip()
 
     for people in data:
-        if people['nome'].lower() == wanted_name.lower():
-            return True, people
+        if str(people[field]).lower() == wanted_value.lower():
+            found_users.append(people)
+
+    if found_users:
+        return True, found_users
 
     return False, MESSAGES['USER_NOT_FOUND']

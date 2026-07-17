@@ -5,7 +5,7 @@ from system.services import (
     anexar_arquivo,
     listar_pessoas,
     remover_alguem,
-    search_name
+    search_by_field
 )
 
 
@@ -19,7 +19,8 @@ def main():
 [bold magenta][1][/]: Novo cadastro
 [bold magenta][2][/]: Listar pessoas
 [bold magenta][3][/]: Remover alguém
-[bold magenta][4][/]: Buscar por nome
+[bold magenta][4][/]: Buscar usuário por nome/ver ID completo
+[bold magenta][5][/]: Buscar usuário por idade
 [bold magenta][0][/]: Para sair''')
 
         choice = input("\nDigite aqui: ")
@@ -54,13 +55,18 @@ def main():
                     ui.mostrar_erro(nome)
 
             case "4":
-                sucesso, mensagem = search_name()
+                sucesso, mensagem = search_by_field('nome')
 
                 if sucesso:
-                    # A função mostrar_pessoas() espera receber uma lista de dicionários.
-                    # Como search_name() retorna apenas um dicionário (uma única pessoa),
-                    # esse dicionário estará numa lista para manter o formato esperado
-                    ui.mostrar_pessoas([mensagem])
+                    ui.mostrar_pessoas(mensagem, True)
+                else:
+                    ui.mostrar_erro(mensagem)
+
+            case "5":
+                sucesso, mensagem = search_by_field('idade')
+
+                if sucesso:
+                    ui.mostrar_pessoas(mensagem, True)
                 else:
                     ui.mostrar_erro(mensagem)
 
