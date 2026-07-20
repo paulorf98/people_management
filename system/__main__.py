@@ -1,11 +1,12 @@
 from system.database import garantir_pasta
 from rich import print
-from system.cli import ui
+from system.cli import ui, mostrar_pessoas
 from system.services import (
     anexar_arquivo,
     listar_pessoas,
     remover_alguem,
-    search_by_field
+    search_by_field,
+    sort_by_field
 )
 
 
@@ -20,7 +21,8 @@ def main():
 [bold magenta][2][/]: Listar pessoas
 [bold magenta][3][/]: Remover alguém
 [bold magenta][4][/]: Buscar usuário por nome/ver ID completo
-[bold magenta][5][/]: Buscar usuário por idade
+[bold magenta][5][/]: Buscar usuário por idade/ver ID completo
+[bold magenta][6][/]: Listar em ordem por campo
 [bold magenta][0][/]: Para sair''')
 
         choice = input("\nDigite aqui: ")
@@ -67,6 +69,20 @@ def main():
 
                 if sucesso:
                     ui.mostrar_pessoas(mensagem, True)
+                else:
+                    ui.mostrar_erro(mensagem)
+
+            case "6":
+                field = input('Digite o campo (nome, idade...) para listar em ordem: ').strip().lower()
+                reverse = input('Deseja ver em ordem decrescente?\nSe sim digite S:  ').strip().lower()
+
+                if reverse == 's':
+                    sucesso, mensagem = sort_by_field(field, True)
+                else:
+                    sucesso, mensagem = sort_by_field(field)
+
+                if sucesso:
+                    mostrar_pessoas(mensagem)
                 else:
                     ui.mostrar_erro(mensagem)
 

@@ -3,7 +3,7 @@ from rich import print
 from uuid import uuid4
 
 
-def verificar_nome():
+def verificar_nome() -> str:
     while True:
         name = input('Digite seu nome: ').strip()
         if name and all(part.isalpha() for part in name.split()):
@@ -11,7 +11,7 @@ def verificar_nome():
         print('[yellow]Nome inválido![/] Use apenas letras e espaços.')
 
 
-def verificar_idade():
+def verificar_idade() -> int:
     while True:
         try:
             idade = int(input('Digite sua idade: '))
@@ -22,7 +22,7 @@ def verificar_idade():
             print('[red]Somente números são permitidos![/]')
 
 
-def verificar_email():
+def verificar_email() -> str:
     while True:
         try:
             email = input('Digite o seu email: ').strip()
@@ -33,15 +33,14 @@ def verificar_email():
             print(f"Email [yellow]inválido![/] Motivo: [blue]{e}.[/] Tente novamente.")
 
 
-def criar_nova_senha():
+def criar_nova_senha() -> str:
     while True:
         senha = input('Digite sua senha: ')
 
-        if len(senha) < 5:
-            print('Sua senha deve conter no mínimo [red]5[/] caracteres.')
-            continue
+        if len(senha) >= 5:
+            return senha
 
-        return senha
+        print('Sua senha deve conter no mínimo [red]5[/] caracteres.')
 
 
 def cadastrar():

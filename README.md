@@ -6,7 +6,8 @@ Projeto simples de CRUD usando JSON como armazenamento local.
 - Listar usuários
 - Remover usuário por ID
 - Buscar por nome
-- busca por idade
+- Buscar por idade
+- Listar por campo e ordem
 
 ## Tecnologias / Bibliotecas
 - Python
@@ -31,6 +32,7 @@ people_management/
     │   └── pessoa.py
     ├── services/
     │   └── people_service.py
+    ├── type_aliases.py
     └── main.py
 ```
 
