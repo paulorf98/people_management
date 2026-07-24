@@ -52,9 +52,9 @@ def cadastrar():
     print('---Cadastro finalizado---')
 
     return {
-        'id': str(uuid4()),
-        'nome': name,
-        'idade': age,
-        'email': email,
-        'senha': password
-    }
+            'id': str(uuid4()),
+            'nome': name,
+            'idade': age,
+            'email': email,
+            'senha': password
+        }

@@ -1,31 +1,23 @@
-from system.database import garantir_pasta
+from system import garantir_pasta
 from rich import print
-from system.cli import ui, mostrar_pessoas
-from system.services import (
+from system import ui
+from system import (
     anexar_arquivo,
     listar_pessoas,
     remover_alguem,
     search_by_field,
-    sort_by_field
+    sort_by_field,
+    all_people_function,
+    edit_registration
 )
 
 
 def main():
     garantir_pasta()
-    print('\n---Sistema de cadastro---')
 
     while True:
 
-        print('''
-[bold magenta][1][/]: Novo cadastro
-[bold magenta][2][/]: Listar pessoas
-[bold magenta][3][/]: Remover alguém
-[bold magenta][4][/]: Buscar usuário por nome/ver ID completo
-[bold magenta][5][/]: Buscar usuário por idade/ver ID completo
-[bold magenta][6][/]: Listar em ordem por campo
-[bold magenta][0][/]: Para sair''')
-
-        choice = input("\nDigite aqui: ")
+        choice = ui.main_panel()
 
         match choice:
             case "0":
@@ -52,7 +44,7 @@ def main():
                 sucesso, nome = remover_alguem(id_procurado)
 
                 if sucesso:
-                    ui.mostrar_remocao(nome)
+                    ui.show_removal(nome)
                 else:
                     ui.mostrar_erro(nome)
 
@@ -82,7 +74,23 @@ def main():
                     sucesso, mensagem = sort_by_field(field)
 
                 if sucesso:
-                    mostrar_pessoas(mensagem)
+                    ui.mostrar_pessoas(mensagem)
+                else:
+                    ui.mostrar_erro(mensagem)
+
+            case "7":
+                people = all_people_function()
+
+                if people == 0:
+                    ui.mostrar_erro('Nenhuma pessoa cadastrada')
+                else:
+                    print(f'há um total de {people} pessoas cadastradas')
+
+            case "8":
+                sucesso, mensagem = edit_registration()
+
+                if sucesso:
+                    print(mensagem)
                 else:
                     ui.mostrar_erro(mensagem)
 

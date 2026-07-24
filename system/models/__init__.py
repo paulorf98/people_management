@@ -1,1 +1,1 @@
-from .pessoa import cadastrar
+from .pessoa import cadastrar, verificar_nome, verificar_idade, verificar_email, criar_nova_senha

@@ -1,5 +1,6 @@
 from system import Pessoas
-from system.cli import MESSAGES, empty_data
+from system.models import verificar_nome, verificar_idade, verificar_email, criar_nova_senha
+from system.cli import MESSAGES, empty_data, two_step_verification, mostrar_erro
 from system.models import cadastrar
 from system.database import (
     carregar_dados,
@@ -47,8 +48,18 @@ def remover_alguem(id_procurado: str) -> tuple[bool, str]:
     if nome_removido is None:
         return False, MESSAGES['ID_NOT_FOUND']
 
-    salvar_dados(nova_lista)
-    return True, nome_removido
+    while True:
+
+        choice = two_step_verification(f'Deseja mesmo excluir {nome_removido}? [s/n]')
+
+        if choice == 's':
+            salvar_dados(nova_lista)
+            return True, f"Usuário {nome_removido} foi removido."
+
+        if choice == 'n':
+            return True, f"Usuário {nome_removido} não foi removido."
+
+        mostrar_erro('Digite apenas "s" ou "n".')
 
 
 def search_by_field(field: str) -> tuple[bool, Pessoas | str]:
@@ -93,3 +104,40 @@ def sort_by_field(field: str, reverse_order: bool = False) -> tuple[bool, str | 
 
     return True, people_list
 
+
+def all_people_function() -> int:
+    return len(carregar_dados())
+
+
+def edit_registration() -> tuple[bool, str]:
+    data = carregar_dados()
+    new_list = []
+
+    if not data:
+        return empty_data()
+
+    proposed_id = input('Digite o ID para editar o cadastro: ').strip().lower()
+
+    found = False
+
+    for person in data:
+        if proposed_id == person['id']:
+            found = True
+
+            edited_person = {
+                'id': person['id'],
+                'nome': verificar_nome(),
+                'idade': verificar_idade(),
+                'email': verificar_email(),
+                'senha': criar_nova_senha(),
+            }
+            new_list.append(edited_person)
+            continue
+
+        new_list.append(person)
+
+    if not found:
+        return False, MESSAGES['ID_NOT_FOUND']
+
+    salvar_dados(new_list)
+    return True, MESSAGES['EDIT_SUCCESS']
