@@ -1,2 +1,2 @@
-from .messages import MESSAGES, empty_data
-from .ui import two_step_verification, mostrar_erro
+from .messages import MESSAGES
+from .ui import show_result, mostrar_pessoas

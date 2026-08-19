@@ -4,10 +4,8 @@ MESSAGES = {
     "EMAIL_EXISTS": "Este email já está cadastrado.",
     "NAME_ALREADY_EXISTS": "Nomes não podem repetir",
     "INVALID_VALUE": "Valor inválido na função de listagem",
+    "EMPTY_DATA": "Nenhuma pessoa cadastrada",
 
     "REGISTER_SUCCESS": "Cadastro realizado com sucesso.",
     "EDIT_SUCCESS": "Cadastro editado com sucesso."
 }
-
-def empty_data() -> tuple[bool, str]:
-    return False, "Nenhuma pessoa cadastrada."

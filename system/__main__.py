@@ -1,5 +1,4 @@
 from system import garantir_pasta
-from rich import print
 from system import ui
 from system import (
     anexar_arquivo,
@@ -24,78 +23,38 @@ def main():
                 break
 
             case "1":
-                sucesso, mensagem = anexar_arquivo()
-
-                if sucesso:
-                    print(mensagem)
-                else:
-                    ui.mostrar_erro(mensagem)
+                anexar_arquivo()
 
             case "2":
-                sucesso, mensagem = listar_pessoas()
-
-                if sucesso:
-                    ui.mostrar_pessoas(mensagem)
-                else:
-                    ui.mostrar_erro(mensagem)
+                listar_pessoas()
 
             case "3":
-                id_procurado = input("Digite o id: ")
-                sucesso, nome = remover_alguem(id_procurado)
-
-                if sucesso:
-                    ui.show_removal(nome)
-                else:
-                    ui.mostrar_erro(nome)
+                id_procurado = input("Digite o ID: ")
+                remover_alguem(id_procurado)
 
             case "4":
-                sucesso, mensagem = search_by_field('nome')
-
-                if sucesso:
-                    ui.mostrar_pessoas(mensagem, True)
-                else:
-                    ui.mostrar_erro(mensagem)
+                search_by_field("nome")
 
             case "5":
-                sucesso, mensagem = search_by_field('idade')
-
-                if sucesso:
-                    ui.mostrar_pessoas(mensagem, True)
-                else:
-                    ui.mostrar_erro(mensagem)
+                search_by_field("idade")
 
             case "6":
-                field = input('Digite o campo (nome, idade...) para listar em ordem: ').strip().lower()
-                reverse = input('Deseja ver em ordem decrescente?\nSe sim digite S:  ').strip().lower()
+                field = input("Digite o campo (id, nome, idade, email) para listar em ordem: ").strip().lower()
+                reverse = input("Deseja ver em ordem reversa? (s/n): ").strip().lower()
 
-                if reverse == 's':
-                    sucesso, mensagem = sort_by_field(field, True)
+                if reverse == "s":
+                    sort_by_field(field, True)
                 else:
-                    sucesso, mensagem = sort_by_field(field)
-
-                if sucesso:
-                    ui.mostrar_pessoas(mensagem)
-                else:
-                    ui.mostrar_erro(mensagem)
+                    sort_by_field(field)
 
             case "7":
-                people = all_people_function()
-
-                if people == 0:
-                    ui.mostrar_erro('Nenhuma pessoa cadastrada')
-                else:
-                    print(f'há um total de {people} pessoas cadastradas')
+                all_people_function()
 
             case "8":
-                sucesso, mensagem = edit_registration()
-
-                if sucesso:
-                    print(mensagem)
-                else:
-                    ui.mostrar_erro(mensagem)
+                edit_registration()
 
             case _:
-                ui.mostrar_erro("Digite uma opção adequada.")
+                ui.show_result("Digite uma opção adequada.", "error")
 
 if __name__ == '__main__':
     main()

@@ -3,7 +3,13 @@ from rich.panel import Panel
 from rich import print
 from system import Pessoas
 
-def mostrar_pessoas(dados: Pessoas | str, id_completo: bool = False):
+def mostrar_pessoas(dados: Pessoas | str, id_completo: bool = False) -> None:
+    """
+    Cria uma tabela que exibirá dados.
+
+    :param dados: Informações a exibir em tabela
+    :param id_completo: True: exibirá id completo. False: Exibirá os 8 primeiros dígitos
+    """
     tabela = Table(title='Pessoas cadastradas', title_style='bold magenta')
 
     tabela.add_column('ID')
@@ -28,12 +34,28 @@ def show_removal(nome) -> None:
     print(
         Panel(
             f'[green]{nome}[/]',
-            title='Sucesso'
+            title='Success'
         )
     )
 
-def mostrar_erro(texto) -> None:
-    print(Panel(f'[yellow]Erro![/] {texto}'))
+def show_result(text: str, type_of_result: str) -> None:
+    """
+    Recebe um texto para exibir ao usuário, seja em forma de erro ou não conforme o type_of_result.
+
+    :param text: Texto que deseja imprimir ao usuário, sendo ele de erro ou não.
+    :param type_of_result: Define se irá imprimir como erro ou não.
+    Se for "success" apenas irá exibir o texto. Caso seja "error", exibirá de forma mais explícita.
+    """
+
+    if type_of_result == "error":
+        print(Panel(f"[yellow]Erro![/] {text}"))
+        return
+
+    if type_of_result == "success":
+        print(text)
+        return
+
+    raise ValueError(f"Tipo de resultado inválido: {type_of_result!r}")
 
 def main_panel() -> str:
     print('\n---Sistema de cadastro---')
@@ -50,9 +72,4 @@ def main_panel() -> str:
     [bold magenta][0][/]: Para sair\n''')
 
     choice = input('Digite aqui: ')
-    return choice
-
-
-def two_step_verification(text: str) -> str:
-    choice = input(f'{text}?\nDigite aqui: ').strip().lower()
     return choice

@@ -1,4 +1,4 @@
-from .type_aliases import Pessoas
+from .type_aliases import Pessoas, Pessoa
 from .cli import ui
 from .database import garantir_pasta
 from .services import (
