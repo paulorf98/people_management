@@ -1,12 +1,13 @@
 from system import Pessoas, Pessoa
 from system.models import verificar_nome, verificar_idade, verificar_email, criar_nova_senha
-from system.cli import MESSAGES, show_result, mostrar_pessoas
+from system.cli import MESSAGES, show_result, mostrar_pessoas, empty_data, panel
 from system.models import cadastrar
 from system.database import (
     carregar_dados,
     salvar_dados
 )
 
+VALID_FIELDS: set[str] = {"id", "nome", "idade", "email"}
 
 def anexar_arquivo() -> None:
     new_person: Pessoa = cadastrar()
@@ -25,18 +26,20 @@ def listar_pessoas() -> None:
     data: Pessoas = carregar_dados()
 
     if not data:
-        show_result(MESSAGES["EMPTY_DATA"], "error")
+        empty_data()
         return
 
     mostrar_pessoas(data)
 
 
-def remover_alguem(id_procurado: str) -> None:
+def remover_alguem() -> None:
     data: Pessoas = carregar_dados()
 
     if not data:
-        show_result(MESSAGES["EMPTY_DATA"], "error")
+        empty_data()
         return
+
+    id_procurado: str = input("Digite o id da pessoa que deseja remover: ")
 
     nova_lista: Pessoas = []
     nome_removido: str | None = None
@@ -57,11 +60,11 @@ def remover_alguem(id_procurado: str) -> None:
 
         if choice == 's':
             salvar_dados(nova_lista)
-            show_result(f"\nUsuário [blue]{nome_removido}[/] foi removido.", "success")
+            panel(f"\nUsuário [blue]{nome_removido}[/] foi removido com sucesso.")
             return
 
         if choice == 'n':
-            show_result(f"\nUsuário [blue]{nome_removido}[/] não foi removido.", "success")
+            panel(f"\nUsuário [blue]{nome_removido}[/] não foi removido com sucesso.")
             return
 
         show_result('Digite apenas "s" ou "n".', "error")
@@ -72,7 +75,7 @@ def search_by_field(field: str) -> None:
     found_users: Pessoas = []
 
     if not data:
-        show_result(MESSAGES["EMPTY_DATA"], "error")
+        empty_data()
         return
 
     if field not in ['nome', 'idade']:
@@ -92,18 +95,24 @@ def search_by_field(field: str) -> None:
     show_result(MESSAGES['USER_NOT_FOUND'], "error")
 
 
-def sort_by_field(field: str, reverse_order: bool = False) -> None:
+def sort_by_field() -> None:
     data: Pessoas = carregar_dados()
 
     if not data:
-        show_result(MESSAGES["EMPTY_DATA"], "error")
+        empty_data()
         return
 
-    valid_fields: set[str] = {"id", "nome", "idade", "email"}
+    reverse_order: bool = False
+    field: str = input("Digite o campo (id, nome, idade, email) para listar em ordem: ").strip().lower()
 
-    if field not in valid_fields:
+    if field not in VALID_FIELDS:
         show_result(MESSAGES['INVALID_VALUE'], "error")
         return
+
+    reverse: str = input("Deseja ver em ordem reversa? (s/n): ").strip().lower()
+
+    if reverse == "s":
+        reverse_order = True
 
     people_list = sorted(
         data,
@@ -118,7 +127,7 @@ def all_people_function() -> None:
     people: int = len(carregar_dados())
 
     if people == 0:
-        show_result(MESSAGES["EMPTY_DATA"], "error")
+        empty_data()
     else:
         print(f'\nHá um total de {people} pessoas cadastradas')
 
@@ -128,7 +137,7 @@ def edit_registration() -> None:
     new_list: Pessoas = []
 
     if not data:
-        show_result(MESSAGES["EMPTY_DATA"], "error")
+        empty_data()
         return
 
     proposed_id: str = input('Digite o ID para editar o cadastro: ').strip().lower()

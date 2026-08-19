@@ -3,6 +3,7 @@ from rich.panel import Panel
 from rich import print
 from system import Pessoas
 
+
 def mostrar_pessoas(dados: Pessoas | str, id_completo: bool = False) -> None:
     """
     Cria uma tabela que exibirá dados.
@@ -30,11 +31,17 @@ def mostrar_pessoas(dados: Pessoas | str, id_completo: bool = False) -> None:
 
     print(tabela)
 
-def show_removal(nome) -> None:
+def panel(text: str) -> None:
+    """
+    Recebe um texto para exibir em forma de tabela.
+
+    :param text: Texto a ser exibido na tabela
+    """
+
     print(
         Panel(
-            f'[green]{nome}[/]',
-            title='Success'
+            f'[green]{text}[/]',
+            title="Sucesso"
         )
     )
 
@@ -48,14 +55,15 @@ def show_result(text: str, type_of_result: str) -> None:
     """
 
     if type_of_result == "error":
-        print(Panel(f"[yellow]Erro![/] {text}"))
+        print(Panel(f"[red]Erro![/] {text}"))
         return
 
     if type_of_result == "success":
-        print(text)
+        print(Panel(f"[green]Success![/] {text}"))
         return
 
     raise ValueError(f"Tipo de resultado inválido: {type_of_result!r}")
+
 
 def main_panel() -> str:
     print('\n---Sistema de cadastro---')
@@ -73,3 +81,6 @@ def main_panel() -> str:
 
     choice = input('Digite aqui: ')
     return choice
+
+def empty_data() -> None:
+    show_result("Nenhuma pessoa cadastrada", "error")

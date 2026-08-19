@@ -1,23 +1,25 @@
 # 🧾 Sistema de Cadastro em Python
-Projeto simples de CRUD usando JSON como armazenamento local.
+Projeto simples de CRUD com persistência de dados em arquivo JSON.
 
 ## Funcionalidades
-- Criar usuário
-- Listar usuários
-- Remover usuário por ID
+- Criar pessoa
+- Listar pessoas
+- Remover pessoa por ID
 - Buscar por nome
 - Buscar por idade
 - Listar por campo e ordem
+- Total de pessoas cadastradas
+- Editar cadastro
 
 ## Tecnologias / Bibliotecas
 - Python
-- JSON
-- Rich (CLI)
-- email-validator
+- JSON — persistência de dados
+- Rich — interface no terminal (CLI)
+- email-validator — validação de endereços de e-mail
 
 ## Estrutura do projeto
 
-```md id="fix1"
+```text
 people_management/
 ├── .gitignore
 ├── README.md
@@ -37,11 +39,13 @@ people_management/
 ```
 
 ## Instalação de dependências
-
+```bash
 pip install -r requirements.txt
+```
 
 ## Como executar
 
+Na raiz do projeto:
 ### 🪟 Windows
 ```bash
 python -m system

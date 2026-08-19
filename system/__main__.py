@@ -29,8 +29,7 @@ def main():
                 listar_pessoas()
 
             case "3":
-                id_procurado = input("Digite o ID: ")
-                remover_alguem(id_procurado)
+                remover_alguem()
 
             case "4":
                 search_by_field("nome")
@@ -39,13 +38,7 @@ def main():
                 search_by_field("idade")
 
             case "6":
-                field = input("Digite o campo (id, nome, idade, email) para listar em ordem: ").strip().lower()
-                reverse = input("Deseja ver em ordem reversa? (s/n): ").strip().lower()
-
-                if reverse == "s":
-                    sort_by_field(field, True)
-                else:
-                    sort_by_field(field)
+                sort_by_field()
 
             case "7":
                 all_people_function()
