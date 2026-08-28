@@ -1,10 +1,8 @@
 from typing import TypedDict
 
-class Pessoa(TypedDict):
+class PersonData(TypedDict):
     id: str
-    nome: str
-    idade: int
+    name: str
+    age: int
     email: str
-    senha: str
-
-type Pessoas = list[Pessoa]
+    password: str

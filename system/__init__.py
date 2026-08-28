@@ -1,12 +1,2 @@
-from .type_aliases import Pessoas, Pessoa
-from .cli import ui
-from .database import garantir_pasta
-from .services import (
-    anexar_arquivo,
-    listar_pessoas,
-    remover_alguem,
-    search_by_field,
-    sort_by_field,
-    all_people_function,
-    edit_registration
-)
+from .services.people_services import register
+from .cli.ui import panel, main_panel

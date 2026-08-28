@@ -1,53 +1,41 @@
-from system import garantir_pasta
-from system import ui
-from system import (
-    anexar_arquivo,
-    listar_pessoas,
-    remover_alguem,
-    search_by_field,
-    sort_by_field,
-    all_people_function,
-    edit_registration
-)
-
+from system import register, panel, main_panel
 
 def main():
-    garantir_pasta()
 
     while True:
 
-        choice = ui.main_panel()
+        choice = main_panel()
 
         match choice:
             case "0":
                 break
 
             case "1":
-                anexar_arquivo()
+                register()
 
             case "2":
-                listar_pessoas()
+                print('Em breve')
 
             case "3":
-                remover_alguem()
+                print('Em breve')
 
             case "4":
-                search_by_field("nome")
+                print('Em breve')
 
             case "5":
-                search_by_field("idade")
+                print('Em breve')
 
             case "6":
-                sort_by_field()
+                print('Em breve')
 
             case "7":
-                all_people_function()
+                print('Em breve')
 
             case "8":
-                edit_registration()
+                print('Em breve')
 
             case _:
-                ui.show_result("Digite uma opção adequada.", "error")
+                panel(category='erro', text='Digite uma opção adequada.')
 
 if __name__ == '__main__':
     main()

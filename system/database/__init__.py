@@ -1,1 +1,1 @@
-from .storage import carregar_dados, salvar_dados, garantir_pasta
+from .storage import load_data, save_data

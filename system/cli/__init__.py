@@ -1,2 +1,1 @@
-from .messages import MESSAGES
-from .ui import show_result, mostrar_pessoas, empty_data, panel
+from .ui import main_panel, show_people, panel, ask_name, ask_age, ask_email, ask_password

@@ -1,17 +1,12 @@
 import json
-import os
-from system import Pessoas
 
-def garantir_pasta() -> None:
-    os.makedirs('data', exist_ok=True)
-
-def carregar_dados() -> Pessoas:
+def load_data():
     try:
-        with open('data/cadastrados.json', 'r', encoding='utf-8') as arquivo:
-            return json.load(arquivo)
+        with open('system/people.json', 'r', encoding='utf-8') as archive:
+            return json.load(archive)
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
-def salvar_dados(dados: Pessoas) -> None:
-    with open('data/cadastrados.json', 'w', encoding='utf-8') as arquivo:
-        json.dump(dados, arquivo, ensure_ascii=False, indent=4)
+def save_data(data) -> None:
+    with open('system/people.json', 'w', encoding='utf-8') as archive:
+        json.dump(data, archive, ensure_ascii=False, indent=4)
