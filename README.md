@@ -26,14 +26,27 @@ people_management/
 ├── requirements.txt
 └── system/
     ├── cli/
-    │   ├── ui.py
-    │   └── messages.py
+    │   ├── __init__.py
+    │   └── ui.py
+    |
     ├── database/
+    |   ├── __init__.py
     │   └── storage.py
+    |
     ├── models/
-    │   └── pessoa.py
+    │   ├── __init__.py
+    |   └── person.py
+    | 
     ├── services/
+    |   | __init__.py
     │   └── people_service.py
+    |
+    ├── utils/
+    |   ├── __init__.py
+    |   ├── people_utils.py
+    |   └── validation.py
+    |   
+    ├── __init__.py
     ├── type_aliases.py
     └── main.py
 ```
