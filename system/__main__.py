@@ -1,4 +1,4 @@
-from system import panel, main_panel
+from system.cli import main_panel, search_people_flow, panel
 from .services.people_services import register, registered_people, delete_person
 
 def main():
@@ -21,7 +21,7 @@ def main():
                 delete_person()
 
             case "4":
-                print('Em breve')
+                search_people_flow()
 
             case "5":
                 print('Em breve')

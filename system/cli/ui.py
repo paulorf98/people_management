@@ -1,7 +1,10 @@
 from rich.table import Table
 from rich.panel import Panel
 from rich import print
-from system.utils.validation import validate_name, validate_age, validate_email_address, validate_password
+
+from system.type_aliases import People
+from system.utils import validation as valid
+from system.services import people_services as services
 
 
 # Painel principal
@@ -12,11 +15,10 @@ def main_panel() -> str:
     [bold magenta][1][/]: Novo cadastro
     [bold magenta][2][/]: Listar pessoas
     [bold magenta][3][/]: Remover alguém
-    [bold magenta][4][/]: Buscar usuário por nome/ver ID completo
-    [bold magenta][5][/]: Buscar usuário por idade/ver ID completo
-    [bold magenta][6][/]: Listar em ordem por campo
-    [bold magenta][7][/]: Total de pessoas cadastradas
-    [bold magenta][8][/]: Editar cadastro
+    [bold magenta][4][/]: Buscar usuário por campo
+    [bold magenta][5][/]: Listar em ordem por campo
+    [bold magenta][6][/]: Total de pessoas cadastradas
+    [bold magenta][7][/]: Editar cadastro
     [bold magenta][0][/]: Para sair\n''')
 
     choice: str = input('Digite aqui: ')
@@ -115,7 +117,7 @@ def panel(category: str, key: str | None = None, text: str | None = None) -> Non
 def ask_name() -> str:
     while True:
         try:
-            return validate_name(input('Digite o seu nome: '))
+            return valid.validate_name(input('Digite o seu nome: '))
         except ValueError as error:
             panel(category='erro', text=str(error))
 
@@ -123,21 +125,21 @@ def ask_name() -> str:
 def ask_age() -> int:
     while True:
         try:
-            return validate_age(input('Digite a sua idade: '))
+            return valid.validate_age(input('Digite a sua idade: '))
         except ValueError as error:
             panel(category='erro', text=str(error))
 
 def ask_email() -> str:
     while True:
         try:
-            return validate_email_address(input('Digite o seu email: '))
+            return valid.validate_email_address(input('Digite o seu email: '))
         except ValueError as error:
             panel(category='erro', text=str(error))
 
 def ask_password() -> str:
     while True:
         try:
-            return validate_password(input('Digite uma senha: '))
+            return valid.validate_password(input('Digite uma senha: '))
         except ValueError as error:
             panel(category='erro', text=str(error))
 
@@ -157,3 +159,49 @@ def confirm(text: str) -> bool:
 
         else:
             print("Digite apenas S ou N.")
+
+# obter campo válido
+def get_valid_field() -> valid.SearchableField:
+    """
+    Administra a interação com o usuário até obter um campo válido pelo usuário.
+
+    :return: SearchableField (campo válido para pesquisa)
+    """
+    while True:
+        field = input("Digite o campo (id, name, age, email): ")
+
+        if valid.validate_field(field):
+            return field
+
+        panel("erro", text="Digite um campo válido")
+
+
+def get_wanted_value(field: valid.SearchableField) -> str | int:
+    """
+    Administra a interação com o usuário para obter o valor desejado.
+    Ex.: name="Paulo", age=18 etc
+
+    :return: str
+    """
+
+    if field == "name":
+        return input("Nome da pessoa: ")
+
+    elif field == "age":
+        while True:
+            try:
+                return int(input("Idade da pessoa: "))
+            except ValueError:
+                panel("erro", text="Digite apenas números em idade.")
+
+    return input(f"{field.capitalize()} da pessoa: ")
+
+
+def search_people_flow() -> None:
+    success: People | None = services.search_people()
+
+    if not success:
+        panel("info", key="USER_NOT_FOUND")
+        return
+
+    show_people(success)

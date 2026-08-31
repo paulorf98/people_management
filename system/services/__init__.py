@@ -1,1 +1,1 @@
-from .people_services import register
+from .people_services import register, search_people

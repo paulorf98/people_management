@@ -37,8 +37,8 @@ def validate_email_address(email: str) -> str:
         raise ValueError(f"E-mail inválido: {e}")
 
 
-PersonKeys = Literal["id", "name", "age", "email", "password"]
-VALID_FIELDS: set[str] = {"id", "name", "age", "email", "password"}
+SearchableField = Literal["id", "name", "age", "email"]
+VALID_FIELDS: set[str] = {"id", "name", "age", "email"}
 
-def validate_field(field: str) -> TypeGuard[PersonKeys]:
+def validate_field(field: str) -> TypeGuard[SearchableField]:
     return field in VALID_FIELDS

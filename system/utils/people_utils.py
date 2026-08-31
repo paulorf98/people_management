@@ -1,5 +1,5 @@
 from system.type_aliases import People, PersonData
-from .validation import validate_field
+from .validation import SearchableField
 
 def email_exists(data: People, email: str) -> bool:
     """
@@ -24,16 +24,17 @@ def remove_person_by_id(data: People, person_id: str) -> People:
     return [person for person in data if person['id'] != person_id]
 
 
-def search_by_field(data: People, field: str, wanted_value) -> People | None:
-    if not validate_field(field):
-        return None
-
+def search_by_field(data: People, field: SearchableField, wanted_value: str) -> People | None:
+    """
+    Retorna uma lista com as pessoas encontradas.
+    """
     found_users: People = []
 
     for person in data:
         if person[field] == wanted_value:
             found_users.append(person)
 
-        return found_users
+    if found_users is None:
+        return None
 
-    return None
+    return found_users

@@ -3,7 +3,8 @@ from system.models.person import Person
 from uuid import uuid4
 from system.database import load_data, save_data
 from system.type_aliases import PersonData, People
-from system.utils.people_utils import email_exists, find_person, remove_person_by_id
+from system.utils import people_utils as utils
+
 
 def create_person_flow() -> Person:
     # Verifica os dados informados
@@ -35,7 +36,7 @@ def register() -> None:
     data: People = load_data()
 
     # Verifica se o email já existe
-    exists = email_exists(data=data, email=person_data['email'])
+    exists = utils.email_exists(data=data, email=person_data['email'])
     if exists:
         ui.panel(category="erro", key="EMAIL_EXISTS")
         return
@@ -60,17 +61,20 @@ def registered_people() -> None:
     # lista as pessoas em formato de tabela
     ui.show_people(data)
 
-
+# ADICIONE UMA VERIFICAÇÃO DA SENHA PARA EXCLUIR O USUÁRIO, COMO UM "authenticate(person, password)".
 def delete_person() -> None:
     """
-    Reúne informações do usuário e executa a remoção de uma pessoa.
+    Coordena o fluxo de remoção de uma pessoa.
+
+    Obtém o ID, valida a existência da pessoa,
+    solicita confirmação e persiste a remoção.
 
     :return: None
     """
     data: People = load_data()
 
     person_id = ui.get_person_id()
-    found_person = find_person(data, person_id)
+    found_person = utils.find_person(data, person_id)
 
     if found_person is None:
         ui.panel(category="erro", text="Pessoa não encontrada.")
@@ -88,6 +92,18 @@ def delete_person() -> None:
         )
         return
 
-    updated_data = remove_person_by_id(data, person_id)
+    updated_data = utils.remove_person_by_id(data, person_id)
     save_data(updated_data)
     ui.panel(category="sucesso", key="PERSON_REMOVED")
+
+
+def search_people() -> People | None:
+    data: People = load_data()
+
+    # Obtém o campo
+    field = ui.get_valid_field()
+
+    # obtém o valor específico
+    wanted_value = ui.get_wanted_value(field)
+
+    return utils.search_by_field(data, field, wanted_value)
