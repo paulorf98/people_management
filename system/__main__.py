@@ -1,4 +1,5 @@
-from system import register, panel, main_panel
+from system import panel, main_panel
+from .services.people_services import register, registered_people, delete_person
 
 def main():
 
@@ -14,10 +15,10 @@ def main():
                 register()
 
             case "2":
-                print('Em breve')
+                registered_people()
 
             case "3":
-                print('Em breve')
+                delete_person()
 
             case "4":
                 print('Em breve')

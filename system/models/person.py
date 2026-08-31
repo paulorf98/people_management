@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from system.type_aliases import PersonData
 from system.utils.validation import (
     validate_name,
     validate_age,
@@ -20,7 +21,7 @@ class Person:
         self.email = validate_email_address(self.email)
         self.password = validate_password(self.password)
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> PersonData:
         """Converte a instância de Person para dicionário."""
         return {
             "id": self.id,

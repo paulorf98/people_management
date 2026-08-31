@@ -62,8 +62,8 @@ def show_people(data, full_id: bool = False) -> None:
 
         tabela.add_row(
             id_exibicao,
-            person["nome"],
-            str(person["idade"]),
+            person["name"],
+            str(person["age"]),
             person["email"])
     print(tabela)
 
@@ -78,9 +78,11 @@ MESSAGES = {
         "INVALID_VALUE": "O Valor é inválido.",
         "INCORRECT_PASSWORD": "Senha inválida ou muito fraca.",
         "LIMIT_OF_ATTEMPTS": "Limite de tentativas excedido.",
+        "EMAIL_EXISTS": "Este email já existe.",
     },
     "sucesso": {
-        "USER_CREATED": "Usuário criado com sucesso!"
+        "USER_CREATED": "Usuário criado com sucesso!",
+        "PERSON_REMOVED": "Pessoa removida com sucesso!"
     }
 }
 
@@ -138,3 +140,20 @@ def ask_password() -> str:
             return validate_password(input('Digite uma senha: '))
         except ValueError as error:
             panel(category='erro', text=str(error))
+
+def get_person_id() -> str:
+    return input('Digite o seu id: ')
+
+
+def confirm(text: str) -> bool:
+    while True:
+        _confirm = input(text).strip().upper()
+
+        if _confirm == "S":
+            return True
+
+        elif _confirm == "N":
+            return False
+
+        else:
+            print("Digite apenas S ou N.")

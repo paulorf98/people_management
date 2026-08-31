@@ -1,4 +1,5 @@
 from email_validator import validate_email, EmailNotValidError
+from typing import Literal, TypeGuard
 
 
 def validate_name(name: str) -> str:
@@ -36,3 +37,8 @@ def validate_email_address(email: str) -> str:
         raise ValueError(f"E-mail inválido: {e}")
 
 
+PersonKeys = Literal["id", "name", "age", "email", "password"]
+VALID_FIELDS: set[str] = {"id", "name", "age", "email", "password"}
+
+def validate_field(field: str) -> TypeGuard[PersonKeys]:
+    return field in VALID_FIELDS

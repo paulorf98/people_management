@@ -6,3 +6,5 @@ class PersonData(TypedDict):
     age: int
     email: str
     password: str
+
+type People = list[PersonData]
