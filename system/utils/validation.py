@@ -1,5 +1,6 @@
 from email_validator import validate_email, EmailNotValidError
 from typing import Literal, TypeGuard
+from system.type_aliases import PersonData
 
 
 def validate_name(name: str) -> str:
@@ -23,10 +24,10 @@ def validate_password(password: str) -> str:
     has_min = len(password) >= 8
     has_upper = any(c.isupper() for c in password)
     has_digit = any(c.isdigit() for c in password)
-    has_special = any(c in "!@#$" for c in password)
+    has_special = any(c in "!@#$*&%/|" for c in password)
 
     if not all([has_min, has_upper, has_digit, has_special]):
-        raise ValueError("Senha fraca (requer 8+ caracteres, maiúscula, número e símbolo).")
+        raise ValueError("Senha fraca ou com falta de dependências. (requer 8+ caracteres, maiúscula, número e símbolo).")
     return password
 
 
@@ -42,3 +43,17 @@ VALID_FIELDS: set[str] = {"id", "name", "age", "email"}
 
 def validate_field(field: str) -> TypeGuard[SearchableField]:
     return field in VALID_FIELDS
+
+
+def authenticate(person: PersonData, password: str) -> bool:
+    """
+    Verifica se a senha infirmada é a senha correta do usuário
+
+    :param person: Pessoa cadastrada com a sua senha válida
+    :param password: Senha informada pelo usuário
+    :return: bool: True para caso a senha informada esteja correta, False para caso não seja
+    """
+    if password == person['password']:
+        return True
+
+    return False

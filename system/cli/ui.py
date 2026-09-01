@@ -1,7 +1,7 @@
 from rich.table import Table
 from rich.panel import Panel
 from rich import print
-
+from system.database import load_data
 from system.type_aliases import People
 from system.utils import validation as valid
 from system.services import people_services as services
@@ -78,7 +78,7 @@ MESSAGES = {
     },
     "erro": {
         "INVALID_VALUE": "O Valor é inválido.",
-        "INCORRECT_PASSWORD": "Senha inválida ou muito fraca.",
+        "INCORRECT_PASSWORD": "Senha inválida.",
         "LIMIT_OF_ATTEMPTS": "Limite de tentativas excedido.",
         "EMAIL_EXISTS": "Este email já existe.",
     },
@@ -137,11 +137,25 @@ def ask_email() -> str:
             panel(category='erro', text=str(error))
 
 def ask_password() -> str:
+    """
+    Força o usuário a digitar uma senha válida. Ideal para cadastrar uma senha ou alterá-la.
+
+    :return: Retorna a senha
+    """
     while True:
         try:
             return valid.validate_password(input('Digite uma senha: '))
         except ValueError as error:
             panel(category='erro', text=str(error))
+
+def get_password() -> str:
+    """
+    Pergunta qual a senha do usuário. Ideal para quando o usuário precisa usar sua senha sem a alterar.
+
+    :return: Retorna a senha informada pelo usuário.
+    """
+    return input("Digite sua senha: ")
+
 
 def get_person_id() -> str:
     return input('Digite o seu id: ')
@@ -197,11 +211,44 @@ def get_wanted_value(field: valid.SearchableField) -> str | int:
     return input(f"{field.capitalize()} da pessoa: ")
 
 
-def search_people_flow() -> None:
-    success: People | None = services.search_people()
+def register_flow() -> None:
+    data: People = load_data()
+    services.register(data)
 
-    if not success:
+
+def registered_people_flow() -> None:
+    data: People = load_data()
+    services.registered_people(data)
+
+
+def delete_person_flow() -> None:
+    data: People = load_data()
+    services.delete_person(data)
+
+
+def search_people_flow() ->  None:
+    data: People = load_data()
+    people: People | None = services.search_people(data)
+
+    if not people:
         panel("info", key="USER_NOT_FOUND")
         return
 
-    show_people(success)
+    show_people(people)
+
+
+def sort_by_field_flow() -> None:
+    data: People = load_data()
+
+    field = get_valid_field()
+
+    reverse: str = input("Deseja ver em ordem reversa? (S/N): ").strip().upper()
+
+    if reverse == "S":
+        reverse_order: bool = True
+    else:
+        reverse_order: bool = False
+
+    people = services.sort_by_field(data, field, reverse_order)
+
+    show_people(people, True)

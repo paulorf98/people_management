@@ -24,7 +24,7 @@ def remove_person_by_id(data: People, person_id: str) -> People:
     return [person for person in data if person['id'] != person_id]
 
 
-def search_by_field(data: People, field: SearchableField, wanted_value: str) -> People | None:
+def search_by_field(data: People, field: SearchableField, wanted_value: str | int) -> People | None:
     """
     Retorna uma lista com as pessoas encontradas.
     """

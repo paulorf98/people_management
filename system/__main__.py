@@ -1,30 +1,29 @@
-from system.cli import main_panel, search_people_flow, panel
-from .services.people_services import register, registered_people, delete_person
+from system.cli import ui
 
 def main():
 
     while True:
 
-        choice = main_panel()
+        choice = ui.main_panel()
 
         match choice:
             case "0":
                 break
 
             case "1":
-                register()
+                ui.register_flow()
 
             case "2":
-                registered_people()
+                ui.registered_people_flow()
 
             case "3":
-                delete_person()
+                ui.delete_person_flow()
 
             case "4":
-                search_people_flow()
+                ui.search_people_flow()
 
             case "5":
-                print('Em breve')
+                ui.sort_by_field_flow()
 
             case "6":
                 print('Em breve')
@@ -36,7 +35,7 @@ def main():
                 print('Em breve')
 
             case _:
-                panel(category='erro', text='Digite uma opção adequada.')
+                ui.panel(category='erro', text='Digite uma opção adequada.')
 
 if __name__ == '__main__':
     main()
