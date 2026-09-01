@@ -252,3 +252,15 @@ def sort_by_field_flow() -> None:
     people = services.sort_by_field(data, field, reverse_order)
 
     show_people(people, True)
+
+
+def total_number_of_people_flow() -> None:
+    data: People = load_data()
+
+    total = services.total_number_of_people_registered(data)
+
+    if total == 0:
+        panel("info", key="EMPTY_DATA")
+        return
+
+    print(f"Há um total de [blue]{total}[/] pessoa(s) cadastradas.")

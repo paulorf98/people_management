@@ -26,12 +26,9 @@ def main():
                 ui.sort_by_field_flow()
 
             case "6":
-                print('Em breve')
+                ui.total_number_of_people_flow()
 
             case "7":
-                print('Em breve')
-
-            case "8":
                 print('Em breve')
 
             case _:

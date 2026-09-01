@@ -120,3 +120,6 @@ def sort_by_field(data: People, field: str, reverse_order: bool):
     )
 
     return people_list
+
+def total_number_of_people_registered(data: People) -> int:
+    return len(data)
