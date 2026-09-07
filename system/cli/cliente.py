@@ -1,10 +1,12 @@
-from rich.table import Table
-from rich.panel import Panel
 from rich import print
-from system.database import load_data
+from rich.panel import Panel
+from rich.table import Table
+
+from system.database.storage import load_data
+from system.services import people_services as services
+from system.services.results import EditResult
 from system.type_aliases import People
 from system.utils import validation as valid
-from system.services import people_services as services
 
 
 # Painel principal
@@ -30,17 +32,28 @@ def edit_panel() -> str:
     print('\n---Editar Cadastro---')
 
     print('''
-    [bold magenta][nome] [/]: Alterar o nome
-    [bold magenta][idade][/]: Alterar a idade
-    [bold magenta][email][/]: Alterar o email
-    [bold magenta][senha][/]: Alterar a senha
-    [bold magenta]0[/]: Voltar\n''')
+    [bold magenta][1][/]: Alterar o nome
+    [bold magenta][2][/]: Alterar a idade
+    [bold magenta][3][/]: Alterar o email
+    [bold magenta][4][/]: Alterar a senha
+    [bold magenta][5][/]: Voltar\n''')
 
     choice: str = input('Digite aqui: ').strip().lower()
     return choice
 
+def get_parameter(field: str) -> str | int:
+    if field == "name":
+        return ask_name()
+    elif field == "age":
+        return ask_age()
+    elif field == "email":
+        return ask_email()
+    elif field == "password":
+        return ask_password()
+    return "None"
 
-def show_people(data, full_id: bool = False) -> None:
+
+def show_people(data: People, full_id: bool = False) -> None:
     """
     Cria uma tabela que exibirá dados.
 
@@ -84,7 +97,8 @@ MESSAGES = {
     },
     "sucesso": {
         "USER_CREATED": "Usuário criado com sucesso!",
-        "PERSON_REMOVED": "Pessoa removida com sucesso!"
+        "PERSON_REMOVED": "Pessoa removida com sucesso!",
+        "EDITED_PERSON": "Usuário editado com sucesso!"
     }
 }
 
@@ -187,9 +201,26 @@ def get_valid_field() -> valid.SearchableField:
         if valid.validate_field(field):
             return field
 
-        panel("erro", text="Digite um campo válido")
+        panel("erro", key="INVALID_VALUE")
 
 
+# obter campo válido
+def get_valid_editable_field() -> valid.EditableFields:
+    """
+     Administra a interação com o usuário até obter um campo válido pelo usuário.
+
+    :return: EditableFields (campo válido para edição do cadastro)
+    """
+    while True:
+        field = input("Digite o campo (name, age, email): ")
+
+        if valid.validate_editable_fields(field):
+            return field
+
+        panel("erro", key="INVALID_VALUE")
+
+
+# obter um parâmetro
 def get_wanted_value(field: valid.SearchableField) -> str | int:
     """
     Administra a interação com o usuário para obter o valor desejado.
@@ -251,6 +282,10 @@ def sort_by_field_flow() -> None:
 
     people = services.sort_by_field(data, field, reverse_order)
 
+    if not people:
+        panel("info", key="USER_NOT_FOUND")
+        return
+
     show_people(people, True)
 
 
@@ -264,3 +299,30 @@ def total_number_of_people_flow() -> None:
         return
 
     print(f"Há um total de [blue]{total}[/] pessoa(s) cadastradas.")
+
+
+def edit_person_flow():
+    data = load_data()
+
+    person_id = get_person_id()
+    password = get_password()
+
+    while True:
+        field = get_valid_editable_field()
+        parameter = get_parameter(field)
+
+        if parameter == "None":
+            panel("erro", key="INVALID_VALUE")
+            continue
+        break
+
+    result = services.edit_person(data, person_id, password, field, parameter)
+
+    if result == EditResult.ID_NOT_FOUND:
+        panel("info", key="ID_NOT_FOUND")
+
+    elif result == EditResult.INCORRECT_PASSWORD:
+        panel("erro", key="INCORRECT_PASSWORD")
+
+    else:
+        panel("sucesso", key="EDITED_PERSON")

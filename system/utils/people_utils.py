@@ -1,5 +1,7 @@
 from system.type_aliases import People, PersonData
+
 from .validation import SearchableField
+
 
 def email_exists(data: People, email: str) -> bool:
     """
@@ -34,7 +36,7 @@ def search_by_field(data: People, field: SearchableField, wanted_value: str | in
         if person[field] == wanted_value:
             found_users.append(person)
 
-    if found_users is None:
+    if not found_users:
         return None
 
     return found_users

@@ -1,5 +1,7 @@
-from email_validator import validate_email, EmailNotValidError
 from typing import Literal, TypeGuard
+
+from email_validator import EmailNotValidError, validate_email
+
 from system.type_aliases import PersonData
 
 
@@ -40,20 +42,38 @@ def validate_email_address(email: str) -> str:
 
 SearchableField = Literal["id", "name", "age", "email"]
 VALID_FIELDS: set[str] = {"id", "name", "age", "email"}
+EditableFields = Literal["name", "age", "email", "password"]
+VALID_EDITABLE_FIELDS: set[str] = {"name", "age", "email", "password"}
+
 
 def validate_field(field: str) -> TypeGuard[SearchableField]:
     return field in VALID_FIELDS
 
+def validate_editable_fields(field: str) ->TypeGuard[EditableFields]:
+    return field in VALID_EDITABLE_FIELDS
+
 
 def authenticate(person: PersonData, password: str) -> bool:
     """
-    Verifica se a senha infirmada é a senha correta do usuário
+    Verifica se a senha informada é a senha correta do usuário
 
     :param person: Pessoa cadastrada com a sua senha válida
     :param password: Senha informada pelo usuário
-    :return: bool: True para caso a senha informada esteja correta, False para caso não seja
+    :return: bool: True para caso a senha informada esteja correta, False para caso não esteja correta
     """
-    if password == person['password']:
-        return True
+    return password == person['password']
 
-    return False
+"""
+def authenticate_person(data: People, person_id: str, password: str) -> Literal[EditResult.ID_NOT_FOUND, EditResult.INCORRECT_PASSWORD] | True:
+    person = find_person(data, person_id)
+
+    if person is None:
+        return EditResult.ID_NOT_FOUND
+
+    success = authenticate(person, password)
+
+    if not success:
+        return EditResult.INCORRECT_PASSWORD
+
+    return True
+"""

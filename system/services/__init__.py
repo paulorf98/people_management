@@ -1,1 +1,0 @@
-from .people_services import register, search_people

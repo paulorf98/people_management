@@ -66,5 +66,11 @@ python -m system
 
 ### 🐧Linux:
 ```bash
+python -m system
+```
+
+## OR
+
+```bash
 python3 -m system
 ```
