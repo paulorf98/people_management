@@ -1,4 +1,4 @@
-from system.cli import cliente as cli
+from system.cli import client as cli
 
 
 def main():

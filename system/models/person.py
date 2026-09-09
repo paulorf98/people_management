@@ -1,11 +1,13 @@
 from dataclasses import dataclass
+
 from system.type_aliases import PersonData
 from system.utils.validation import (
-    validate_name,
     validate_age,
+    validate_email_address,
+    validate_name,
     validate_password,
-    validate_email_address
 )
+
 
 @dataclass
 class Person:
@@ -32,7 +34,7 @@ class Person:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Person":
+    def from_dict(cls, data: PersonData) -> "Person":
         """Cria uma instância de Person a partir de um dicionário."""
         return cls(
             id=data["id"],

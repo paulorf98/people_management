@@ -62,18 +62,3 @@ def authenticate(person: PersonData, password: str) -> bool:
     :return: bool: True para caso a senha informada esteja correta, False para caso não esteja correta
     """
     return password == person['password']
-
-"""
-def authenticate_person(data: People, person_id: str, password: str) -> Literal[EditResult.ID_NOT_FOUND, EditResult.INCORRECT_PASSWORD] | True:
-    person = find_person(data, person_id)
-
-    if person is None:
-        return EditResult.ID_NOT_FOUND
-
-    success = authenticate(person, password)
-
-    if not success:
-        return EditResult.INCORRECT_PASSWORD
-
-    return True
-"""

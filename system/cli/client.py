@@ -5,8 +5,9 @@ from rich.table import Table
 from system.database.storage import load_data
 from system.services import people_services as services
 from system.services.results import EditResult
-from system.type_aliases import People
+from system.type_aliases import People, PersonData
 from system.utils import validation as valid
+from system.utils.people_utils import find_person, search_by_field, sort_by_field
 
 
 # Painel principal
@@ -41,6 +42,7 @@ def edit_panel() -> str:
     choice: str = input('Digite aqui: ').strip().lower()
     return choice
 
+
 def get_parameter(field: str) -> str | int:
     if field == "name":
         return ask_name()
@@ -50,7 +52,8 @@ def get_parameter(field: str) -> str | int:
         return ask_email()
     elif field == "password":
         return ask_password()
-    return "None"
+    
+    raise ValueError(f"Campo editável inválido: {field!r}")
 
 
 def show_people(data: People, full_id: bool = False) -> None:
@@ -82,6 +85,7 @@ def show_people(data: People, full_id: bool = False) -> None:
             person["email"])
     print(tabela)
 
+
 # Mensagens do sistema ao usuário
 MESSAGES = {
     "info": {
@@ -101,6 +105,7 @@ MESSAGES = {
         "EDITED_PERSON": "Usuário editado com sucesso!"
     }
 }
+
 
 def panel(category: str, key: str | None = None, text: str | None = None) -> None:
     styles = {
@@ -143,12 +148,14 @@ def ask_age() -> int:
         except ValueError as error:
             panel(category='erro', text=str(error))
 
+
 def ask_email() -> str:
     while True:
         try:
             return valid.validate_email_address(input('Digite o seu email: '))
         except ValueError as error:
             panel(category='erro', text=str(error))
+
 
 def ask_password() -> str:
     """
@@ -161,6 +168,7 @@ def ask_password() -> str:
             return valid.validate_password(input('Digite uma senha: '))
         except ValueError as error:
             panel(category='erro', text=str(error))
+
 
 def get_password() -> str:
     """
@@ -188,6 +196,7 @@ def confirm(text: str) -> bool:
         else:
             print("Digite apenas S ou N.")
 
+
 # obter campo válido
 def get_valid_field() -> valid.SearchableField:
     """
@@ -212,7 +221,7 @@ def get_valid_editable_field() -> valid.EditableFields:
     :return: EditableFields (campo válido para edição do cadastro)
     """
     while True:
-        field = input("Digite o campo (name, age, email): ")
+        field = input("Digite o campo (name, age, email, password): ")
 
         if valid.validate_editable_fields(field):
             return field
@@ -241,27 +250,92 @@ def get_wanted_value(field: valid.SearchableField) -> str | int:
 
     return input(f"{field.capitalize()} da pessoa: ")
 
+def get_reverse_order() -> bool:
+    while True:
+        reverse: str = input("Deseja ver em ordem reversa? (S/N): ").strip().upper()
+
+        if reverse == "S":
+            return True
+        
+        elif reverse == "N":
+            return False
+        
+        else:
+            panel(category="erro", text="Digite uma opção adequada")
+            continue
+
+
 
 def register_flow() -> None:
     data: People = load_data()
-    services.register(data)
 
+    name = ask_name()
+    age = ask_age()
+    email = ask_email()
+    password = ask_password()
+
+    person = services.create_person(name, age, email, password)
+
+    result = services.register(data, person)
+
+    if not result:
+        panel(category="erro", key="EMAIL_EXISTS")
+        return
+
+    panel('sucesso', key='USER_CREATED')
+    
 
 def registered_people_flow() -> None:
     data: People = load_data()
-    services.registered_people(data)
+
+    if not data:
+        panel("info", key="EMPTY_DATA")
+        return
+    
+    show_people(data)
 
 
 def delete_person_flow() -> None:
     data: People = load_data()
-    services.delete_person(data)
+
+    person_id = get_person_id()
+    password = get_password()
+
+    person: PersonData | None = find_person(data, person_id)
+    
+    if person is None:
+        panel("info", key="ID_NOT_FOUND")
+        return
+
+    stop = confirm( f"Deseja mesmo excluir {person['name']}? S/N: " ) 
+
+    if not stop: 
+        panel("info", text=f"A remoção de {person['name']} foi cancelada " 
+                           f"e o usuário não foi deletado." )
+        return
+
+    result = services.delete_person(
+        data,
+        person,
+        password
+    )
+
+    if not result:
+        panel("erro", key="INCORRECT_PASSWORD")
+        return
+
+    panel("sucesso", key="PERSON_REMOVED")
 
 
 def search_people_flow() ->  None:
     data: People = load_data()
-    people: People | None = services.search_people(data)
 
-    if not people:
+    field: valid.SearchableField = get_valid_field()
+    wanted_value: str | int = get_wanted_value(field)
+
+    people: People | None = search_by_field(data, field, wanted_value)
+
+    if people is None:
         panel("info", key="USER_NOT_FOUND")
         return
 
@@ -273,14 +347,9 @@ def sort_by_field_flow() -> None:
 
     field = get_valid_field()
 
-    reverse: str = input("Deseja ver em ordem reversa? (S/N): ").strip().upper()
+    reverse_order = get_reverse_order()
 
-    if reverse == "S":
-        reverse_order: bool = True
-    else:
-        reverse_order: bool = False
-
-    people = services.sort_by_field(data, field, reverse_order)
+    people = sort_by_field(data, field, reverse_order)
 
     if not people:
         panel("info", key="USER_NOT_FOUND")
@@ -292,7 +361,7 @@ def sort_by_field_flow() -> None:
 def total_number_of_people_flow() -> None:
     data: People = load_data()
 
-    total = services.total_number_of_people_registered(data)
+    total = len(data)
 
     if total == 0:
         panel("info", key="EMPTY_DATA")
@@ -304,17 +373,14 @@ def total_number_of_people_flow() -> None:
 def edit_person_flow():
     data = load_data()
 
+
     person_id = get_person_id()
     password = get_password()
 
-    while True:
-        field = get_valid_editable_field()
-        parameter = get_parameter(field)
 
-        if parameter == "None":
-            panel("erro", key="INVALID_VALUE")
-            continue
-        break
+    field = get_valid_editable_field()
+    parameter = get_parameter(field)
+
 
     result = services.edit_person(data, person_id, password, field, parameter)
 

@@ -1,3 +1,5 @@
+from operator import itemgetter
+
 from system.type_aliases import People, PersonData
 
 from .validation import SearchableField
@@ -40,3 +42,14 @@ def search_by_field(data: People, field: SearchableField, wanted_value: str | in
         return None
 
     return found_users
+
+
+def sort_by_field(data: People, field: str, reverse_order: bool) -> People:
+
+    people_list = sorted(
+        data,
+        key=itemgetter(field),
+        reverse=reverse_order
+    )
+
+    return people_list
