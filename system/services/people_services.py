@@ -10,7 +10,7 @@ from system.utils.people_utils import find_person, remove_person_by_id
 from system.utils.validation import EditableFields, authenticate
 
 
-def create_person(name: str, age: int, email: str, password: str):
+def create_person(name: str, age: int, email: str, password: str) -> Person:
  # Cria a pessoa em formato dataclass
     return Person(
         id=str(uuid4()),

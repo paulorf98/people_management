@@ -1,7 +1,7 @@
 from system.cli import client as cli
 
 
-def main():
+def main() -> None:
 
     while True:
 

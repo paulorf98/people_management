@@ -370,7 +370,7 @@ def total_number_of_people_flow() -> None:
     print(f"Há um total de [blue]{total}[/] pessoa(s) cadastradas.")
 
 
-def edit_person_flow():
+def edit_person_flow() -> None:
     data = load_data()
 
 

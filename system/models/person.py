@@ -17,7 +17,7 @@ class Person:
     email: str
     password: str
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.name = validate_name(self.name)
         self.age = validate_age(self.age)
         self.email = validate_email_address(self.email)
